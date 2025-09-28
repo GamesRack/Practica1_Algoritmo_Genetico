@@ -74,10 +74,22 @@ def generar_poblacion():
     
     return poblacion
 
+# Se calcula la ganancia de cada individuo sumando el precio total de sus productos
+def calcular_aptitud(individuo):
+    aptitud_total = 0       # Empezamos con una aptitud de 0
+    for i in range(len(individuo)):
+        # Se multiplica la cantidad de cada producto por su precio y se suma al total
+        cantidad = individuo[i]
+        precio = productos[i]['precio']
+        aptitud_total += cantidad*precio
+    
+    return aptitud_total
+
 poblacion_inicial = generar_poblacion() # Guardamos nuestra poblacion en otra variable
 print('Poblacion inicial')
 for i, cromosoma in enumerate(poblacion_inicial):
     # Para cada individuo se calcula el peso total, multiplicando la cantidad de producto
     # por su peso y sumando estas cantidades, y asi comprobamos que se cumpla la restriccion de peso
     peso_total = sum(cromosoma[j]*productos[j]['peso'] for j in range(len(productos)))
-    print(f'individuo {i+1}: {cromosoma} | peso total: {peso_total:.2f} libras')
+    aptitud = calcular_aptitud(cromosoma)
+    print(f'individuo {i+1}: {cromosoma} | peso total: {peso_total:.2f} libras | aptitud: {aptitud} galeones')
