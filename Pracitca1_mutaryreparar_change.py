@@ -63,6 +63,7 @@ def fitness(cromosoma: List[int]) -> float:
     #Si es valido, devolvemos la suma del beneficio total
     return sum(q * it["precio"] for q, it in zip(cromosoma, productos))
 
+#DESACTIVADA
 #Repara un cromosoma:
 #fuerza límites enteros [0, MAX_UNITS],
 #fuerza los mínimos obligatorios (Love y Skiving),
@@ -148,23 +149,21 @@ def cruza_uniforme(p1: List[int], p2: List[int]) -> Tuple[List[int], List[int]]:
 
 #Mutar
 #Aplica mutación a un cromosoma con probabilidad p.
-#Hay dos tipos de mutación:
-#Reset: asigna a un gen un valor aleatorio entre 0 y MAX_UNITS.
-#Incremento/Decremento: suma o resta 1 al valor de un gen (respetando límites).
-#Después de mutar, repara el cromosoma para garantizar que cumple restricciones.
-def mutar(crom: List[int], p: float) -> List[int]:
-    c = crom[:]
-    for i in range(NUM_productos):
-        if random.random() < p:  # probabilidad por gen
-            if random.random() < 0.5:
-                # Reset
-                c[i] = random.randint(0, MAX_productos)
-            else:
-                # Incremento o decremento
-                c[i] = max(0, min(MAX_productos, c[i] + random.choice([-1, 1])))
-    return reparar(c)
-
-
+#CAMBIADA
+def mutar(cromosoma: List[int], p_m: float) -> List[int]:
+    crom_mutado = []
+    # Iterar sobre cada gen del cromosoma
+    for gen in cromosoma:
+        # Generar un número aleatorio [0, 1) para este gen 
+        if random.random() < p_m: 
+            # Si es menor que P_m, muta el gen
+            # Para binarios, mutar significa 'Bit-Flip' (0 -> 1, 1 -> 0)
+            gen_mutado = 1 - gen 
+            crom_mutado.append(gen_mutado)
+        else:
+            # En caso contrario, el gen es dejado sin modificación 
+            crom_mutado.append(gen)
+    return crom_mutado
 
 #Padre más débil
 def reemplazar_debil(poblacion: List[List[int]], aptitudes: List[float], hijo: List[int], apt_hijo: float):
